@@ -1,0 +1,16 @@
+[package]
+
+name = "beanstalk-rs"
+version = "0.0.1"
+authors = [ "jbcrail@gmail.com" ]
+
+[[lib]]
+
+name = "beanstalk"
+path = "src/beanstalk/lib.rs"
+crate_type = ["dylib", "staticlib"]
+
+[[bin]]
+
+name = "beanstalk-example"
+path = "src/example/main.rs"
