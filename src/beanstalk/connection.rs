@@ -82,6 +82,10 @@ impl Connection {
         execute!("reserve");
     }
 
+    pub fn reserve_job_with_timeout(&mut self, seconds: u32) {
+        execute!("reserve-with-timeout", seconds.to_str());
+    }
+
     pub fn bury_job(&mut self, id: u32, priority: u32) {
         execute!("bury", id.to_str(), priority.to_str());
     }
@@ -96,6 +100,10 @@ impl Connection {
 
     pub fn delete_job(&mut self, id: u32) {
         execute!("delete", id.to_str());
+    }
+
+    pub fn kick_job(&mut self, id: u32) {
+        execute!("kick-job", id.to_str());
     }
 
     pub fn kick(&mut self, bound: u32) {
