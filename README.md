@@ -10,8 +10,8 @@ beanstalk-rs is a high-level library designed to interact with [beanstalkd](http
 
         $ cargo build
 
-3. Run example:
+3. Run command-line interface:
 
-        $ ./target/beanstalk-example 127.0.0.1 11300
+        $ ./target/beanstalk-cli 127.0.0.1 11300
 
 4. Enjoy!

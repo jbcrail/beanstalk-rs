@@ -12,5 +12,5 @@ crate_type = ["dylib", "staticlib"]
 
 [[bin]]
 
-name = "beanstalk-example"
-path = "src/example/main.rs"
+name = "beanstalk-cli"
+path = "src/cli/main.rs"

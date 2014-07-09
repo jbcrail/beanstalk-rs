@@ -27,7 +27,6 @@ impl Connection {
     }
 
     fn send_command(&mut self, cmd: &str, args: Vec<String>, data: &[u8]) -> IoResult<()> {
-        println!("> {}", cmd);
         write!(cmd.as_bytes());
         for arg in args.iter() {
             write!(b" ");
