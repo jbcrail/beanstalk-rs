@@ -1,4 +1,4 @@
-#![crate_id = "beanstalk#0.0.2"]
+#![crate_name = "beanstalk"]
 #![crate_type = "rlib"]
 #![crate_type = "dylib"]
 

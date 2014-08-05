@@ -1,13 +1,9 @@
 use std::io::{IoResult, BufferedStream, TcpStream};
 use std::string::String;
 
-macro_rules! write(
-    ($bytes:expr) => (let _ = self.stream.write($bytes));
-)
-
 macro_rules! execute(
-    ($cmd:expr) => (self.execute($cmd, vec!(), []));
-    ($cmd:expr, $($arg:tt)*) => (self.execute($cmd, vec!($($arg)*), []));
+    ($obj:expr, $cmd:expr) => ($obj.execute($cmd, vec!(), []));
+    ($obj:expr, $cmd:expr, $($arg:tt)*) => ($obj.execute($cmd, vec!($($arg)*), []));
 )
 
 pub struct Connection {
@@ -27,6 +23,8 @@ impl Connection {
     }
 
     fn send_command(&mut self, cmd: &str, args: Vec<String>, data: &[u8]) -> IoResult<()> {
+        macro_rules! write (($bytes:expr) => (let _ = self.stream.write($bytes)))
+
         write!(cmd.as_bytes());
         for arg in args.iter() {
             write!(b" ");
@@ -56,9 +54,9 @@ impl Connection {
         println!("{}", line);
         let fields: Vec<&str> = line.split(' ').collect();
         if fields.len() > 0 {
-            match *fields.get(0) {
+            match fields[0] {
                 "OK" | "FOUND" | "RESERVED" => {
-                    let bytes = from_str::<uint>(*fields.get(fields.len()-1)).unwrap();
+                    let bytes = from_str::<uint>(fields[fields.len()-1]).unwrap();
                     let payload = self.stream.read_exact(bytes+2).unwrap();
                     println!("{}", String::from_utf8(payload).unwrap().as_slice().trim_right());
                 },
@@ -73,106 +71,106 @@ impl Connection {
     pub fn add_job(&mut self, priority: u32, delay: u32, ttr: u32, payload: &[u8]) {
         self.execute(
             "put",
-            vec!(priority.to_str(), delay.to_str(), ttr.to_str(), payload.len().to_str()),
+            vec!(priority.to_string(), delay.to_string(), ttr.to_string(), payload.len().to_string()),
             payload);
     }
 
     pub fn reserve_job(&mut self) {
-        execute!("reserve");
+        execute!(self, "reserve");
     }
 
     pub fn reserve_job_with_timeout(&mut self, seconds: u32) {
-        execute!("reserve-with-timeout", seconds.to_str());
+        execute!(self, "reserve-with-timeout", seconds.to_string());
     }
 
     pub fn bury_job(&mut self, id: u32, priority: u32) {
-        execute!("bury", id.to_str(), priority.to_str());
+        execute!(self, "bury", id.to_string(), priority.to_string());
     }
 
     pub fn release_job(&mut self, id: u32, priority: u32, delay: u32) {
-        execute!("release", id.to_str(), priority.to_str(), delay.to_str());
+        execute!(self, "release", id.to_string(), priority.to_string(), delay.to_string());
     }
 
     pub fn touch_job(&mut self, id: u32) {
-        execute!("touch", id.to_str());
+        execute!(self, "touch", id.to_string());
     }
 
     pub fn delete_job(&mut self, id: u32) {
-        execute!("delete", id.to_str());
+        execute!(self, "delete", id.to_string());
     }
 
     pub fn kick_job(&mut self, id: u32) {
-        execute!("kick-job", id.to_str());
+        execute!(self, "kick-job", id.to_string());
     }
 
     pub fn kick(&mut self, bound: u32) {
-        execute!("kick", bound.to_str());
+        execute!(self, "kick", bound.to_string());
     }
 
     pub fn peek(&mut self, id: u32) {
-        execute!("peek", id.to_str());
+        execute!(self, "peek", id.to_string());
     }
 
     pub fn peek_ready(&mut self) {
-        execute!("peek-ready");
+        execute!(self, "peek-ready");
     }
 
     pub fn peek_delayed(&mut self) {
-        execute!("peek-delayed");
+        execute!(self, "peek-delayed");
     }
 
     pub fn peek_buried(&mut self) {
-        execute!("peek-buried");
+        execute!(self, "peek-buried");
     }
 
     // tube commands
 
     pub fn use_tube(&mut self, tube: &str) {
-        execute!("use", tube.to_str());
+        execute!(self, "use", tube.to_string());
     }
 
     pub fn watch_tube(&mut self, tube: &str) {
-        execute!("watch", tube.to_str());
+        execute!(self, "watch", tube.to_string());
     }
 
     pub fn ignore_tube(&mut self, tube: &str) {
-        execute!("ignore", tube.to_str());
+        execute!(self, "ignore", tube.to_string());
     }
 
     pub fn pause_tube(&mut self, tube: &str, delay: u32) {
-        execute!("pause-tube", tube.to_str(), delay.to_str());
+        execute!(self, "pause-tube", tube.to_string(), delay.to_string());
     }
 
     pub fn list_tubes(&mut self) {
-        execute!("list-tubes");
+        execute!(self, "list-tubes");
     }
 
     pub fn list_used_tube(&mut self) {
-        execute!("list-tube-used");
+        execute!(self, "list-tube-used");
     }
 
     pub fn list_watched_tubes(&mut self) {
-        execute!("list-tubes-watched");
+        execute!(self, "list-tubes-watched");
     }
 
     // statistics commands
 
     pub fn stats(&mut self) {
-        execute!("stats");
+        execute!(self, "stats");
     }
 
     pub fn job_stats(&mut self, id: u32) {
-        execute!("stats-job", id.to_str());
+        execute!(self, "stats-job", id.to_string());
     }
 
     pub fn tube_stats(&mut self, tube: &str) {
-        execute!("stats-tube", tube.to_str());
+        execute!(self, "stats-tube", tube.to_string());
     }
 
     // miscellaneous commands
 
     pub fn quit(&mut self) {
-        execute!("quit");
+        execute!(self, "quit");
         drop(self);
     }
 }
