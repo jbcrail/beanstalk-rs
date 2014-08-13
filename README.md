@@ -1,4 +1,5 @@
-# beanstalk-rs
+beanstalk-rs ![Build Status](https://travis-ci.org/jbcrail/beanstalk-rs.png)
+============
 
 beanstalk-rs is a high-level library designed to interact with [beanstalkd](http://kr.github.io/beanstalkd/).
 
