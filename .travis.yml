@@ -1,6 +1,6 @@
 language: rust
 install:
-  - curl http://www.rust-lang.org/rustup.sh | sudo sh -
+  - curl https://static.rust-lang.org/rustup.sh | sudo sh -
 script:
   - cargo clean
   - cargo build --verbose

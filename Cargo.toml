@@ -8,7 +8,7 @@ authors = [ "jbcrail@gmail.com" ]
 
 name = "beanstalk"
 path = "src/beanstalk/lib.rs"
-crate_type = ["dylib", "staticlib"]
+crate_type = ["rlib", "dylib"]
 
 [[bin]]
 
