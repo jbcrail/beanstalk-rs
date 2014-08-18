@@ -4,7 +4,7 @@ name = "beanstalk-rs"
 version = "0.0.2"
 authors = [ "jbcrail@gmail.com" ]
 
-[[lib]]
+[lib]
 
 name = "beanstalk"
 path = "src/beanstalk/lib.rs"
