@@ -46,7 +46,7 @@ impl Connection {
         let _ = self.send_command(cmd, args, data);
         let response = self.read_response();
         if response.is_err() {
-            fail!(format!("beanstalkd command failed"));
+            panic!(format!("beanstalkd command failed"));
         }
 
         let resp = response.unwrap();
