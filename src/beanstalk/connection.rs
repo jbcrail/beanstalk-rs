@@ -12,7 +12,7 @@ pub struct Connection {
 
 impl Connection {
     pub fn new(host: &str, port: u16) -> Result<Connection, &str> {
-        let sock = match TcpStream::connect(host, port) {
+        let sock = match TcpStream::connect((host, port)) {
             Ok(x) => x,
             Err(_) => { return Err("connection refused") },
         };
