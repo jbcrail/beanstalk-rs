@@ -1,6 +1,3 @@
-#![crate_name = "beanstalk-cli"]
-#![crate_type = "bin"]
-
 extern crate beanstalk;
 
 use std::io;

@@ -7,10 +7,10 @@ authors = [ "jbcrail@gmail.com" ]
 [lib]
 
 name = "beanstalk"
-path = "src/beanstalk/lib.rs"
+path = "src/lib.rs"
 crate_type = ["rlib", "dylib"]
 
 [[bin]]
 
 name = "beanstalk-cli"
-path = "src/cli/main.rs"
+path = "src/main.rs"
