@@ -2,8 +2,8 @@ use std::io::{IoResult, BufferedStream, TcpStream};
 use std::string::String;
 
 macro_rules! execute(
-    ($obj:expr, $cmd:expr) => ($obj.execute($cmd, vec!(), []));
-    ($obj:expr, $cmd:expr, $($arg:tt)*) => ($obj.execute($cmd, vec!($($arg)*), []));
+    ($obj:expr, $cmd:expr) => ($obj.execute($cmd, vec!(), &[]));
+    ($obj:expr, $cmd:expr, $($arg:tt)*) => ($obj.execute($cmd, vec!($($arg)*), &[]));
 )
 
 pub struct Connection {
