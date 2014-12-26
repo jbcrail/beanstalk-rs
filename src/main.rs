@@ -33,7 +33,7 @@ fn main() {
     };
 
     let port: u16 = if args.len() > 2 {
-        from_str::<u16>(args[2].as_slice()).unwrap()
+        args[2].as_slice().parse::<u16>().unwrap()
     } else {
         11300
     };
