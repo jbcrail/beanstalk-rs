@@ -1,10 +1,10 @@
 use std::io::{IoResult, BufferedStream, TcpStream};
 use std::string::String;
 
-macro_rules! execute(
+macro_rules! execute {
     ($obj:expr, $cmd:expr) => ($obj.execute($cmd, vec!(), &[]));
     ($obj:expr, $cmd:expr, $($arg:tt)*) => ($obj.execute($cmd, vec!($($arg)*), &[]));
-)
+}
 
 pub struct Connection {
     stream: BufferedStream<TcpStream>
@@ -23,7 +23,7 @@ impl Connection {
     }
 
     fn send_command(&mut self, cmd: &str, args: Vec<String>, data: &[u8]) -> IoResult<()> {
-        macro_rules! write (($bytes:expr) => (let _ = self.stream.write($bytes)))
+        macro_rules! write { ($bytes:expr) => (let _ = self.stream.write($bytes)) }
 
         write!(cmd.as_bytes());
         for arg in args.iter() {
