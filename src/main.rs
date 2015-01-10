@@ -29,7 +29,7 @@ fn main() {
     let host = if args.len() > 1 {
         args[1].clone()
     } else {
-        String::from_str("127.0.0.1").clone()
+        "127.0.0.1".to_string()
     };
 
     let port: u16 = if args.len() > 2 {

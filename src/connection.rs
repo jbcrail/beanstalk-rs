@@ -56,7 +56,7 @@ impl Connection {
         if fields.len() > 0 {
             match fields[0] {
                 "OK" | "FOUND" | "RESERVED" => {
-                    let bytes = fields[fields.len()-1].parse::<uint>().unwrap();
+                    let bytes = fields[fields.len()-1].parse::<usize>().unwrap();
                     let payload = self.stream.read_exact(bytes+2).unwrap();
                     println!("{}", String::from_utf8(payload).unwrap().as_slice().trim_right());
                 },
