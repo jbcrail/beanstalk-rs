@@ -1,4 +1,4 @@
-use std::io::{IoResult, BufferedStream, TcpStream};
+use std::old_io::{IoResult, BufferedStream, TcpStream};
 use std::string::String;
 
 macro_rules! execute {

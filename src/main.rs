@@ -1,7 +1,7 @@
 extern crate beanstalk;
 
-use std::io;
-use std::io::BufferedReader;
+use std::old_io;
+use std::old_io::BufferedReader;
 use std::os;
 use beanstalk::Connection;
 
@@ -45,7 +45,7 @@ fn main() {
     loop {
         print!("> ");
 
-        let mut reader = BufferedReader::new(io::stdin());
+        let mut reader = BufferedReader::new(old_io::stdin());
         let line = reader.read_line().unwrap();
         let input = line.as_slice().trim_right();
         let args: Vec<&str> = input.split(' ').collect();
