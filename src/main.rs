@@ -1,8 +1,8 @@
 extern crate beanstalk;
 
+use std::env;
 use std::old_io;
 use std::old_io::BufferedReader;
-use std::os;
 use beanstalk::Connection;
 
 fn help() {
@@ -24,7 +24,7 @@ fn help() {
 }
 
 fn main() {
-    let args = os::args();
+    let args: Vec<String> = env::args().map(|s| s.into_string().unwrap()).collect();
 
     let host = if args.len() > 1 {
         args[1].clone()
