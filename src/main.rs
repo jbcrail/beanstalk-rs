@@ -24,7 +24,7 @@ fn help() {
 }
 
 fn main() {
-    let args: Vec<String> = env::args().map(|s| s.into_string().unwrap()).collect();
+    let args: Vec<String> = env::args().map(|s| s.to_string()).collect();
 
     let host = if args.len() > 1 {
         args[1].clone()
