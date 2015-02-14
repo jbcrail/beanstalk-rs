@@ -1,3 +1,5 @@
+#![feature(core, env, io)]
+
 extern crate beanstalk;
 
 use std::env;
