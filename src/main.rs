@@ -1,4 +1,4 @@
-#![feature(core, env, io)]
+#![feature(core, io)]
 
 extern crate beanstalk;
 
