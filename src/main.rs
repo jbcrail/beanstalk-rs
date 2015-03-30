@@ -1,10 +1,7 @@
-#![feature(core, io)]
-
 extern crate beanstalk;
 
 use std::env;
-use std::old_io;
-use std::old_io::BufferedReader;
+use std::io::{BufRead, BufReader, stdin};
 use beanstalk::Connection;
 
 fn help() {
@@ -35,21 +32,22 @@ fn main() {
     };
 
     let port: u16 = if args.len() > 2 {
-        args[2].as_slice().parse::<u16>().unwrap()
+        args[2].parse::<u16>().unwrap()
     } else {
         11300
     };
 
     println!("# connecting to {}:{}", host, port);
     println!("# type 'help' for available commands");
-    let mut conn = Connection::new(host.as_slice(), port).unwrap();
+    let mut conn = Connection::new(&host, port).unwrap();
 
     loop {
         print!("> ");
 
-        let mut reader = BufferedReader::new(old_io::stdin());
-        let line = reader.read_line().unwrap();
-        let input = line.as_slice().trim_right();
+        let mut reader = BufReader::new(stdin());
+        let mut line = String::new();
+        let _ = reader.read_line(&mut line);
+        let input = line.trim_right();
         let args: Vec<&str> = input.split(' ').collect();
 
         match args[0] {

@@ -1,4 +1,6 @@
-use std::old_io::{IoResult, BufferedStream, TcpStream};
+use std::io::Result;
+use std::io::{BufRead, BufStream, Read, Write};
+use std::net::TcpStream;
 use std::string::String;
 
 macro_rules! execute {
@@ -7,22 +9,23 @@ macro_rules! execute {
 }
 
 pub struct Connection {
-    stream: BufferedStream<TcpStream>
+    stream: BufStream<TcpStream>
 }
 
 impl Connection {
-    pub fn new(host: &str, port: u16) -> Result<Connection, &str> {
-        let sock = match TcpStream::connect((host, port)) {
+    pub fn new(host: &str, port: u16) -> Result<Connection> {
+        let addr = format!("{}:{}", host, port);
+        let sock = match TcpStream::connect(&addr[..]) {
             Ok(x) => x,
-            Err(_) => { return Err("connection refused") },
+            Err(e) => { return Err(e) },
         };
 
-        let rv = Connection { stream: BufferedStream::new(sock) };
+        let rv = Connection { stream: BufStream::new(sock) };
 
         Ok(rv)
     }
 
-    fn send_command(&mut self, cmd: &str, args: Vec<String>, data: &[u8]) -> IoResult<()> {
+    fn send_command(&mut self, cmd: &str, args: Vec<String>, data: &[u8]) -> Result<()> {
         macro_rules! write { ($bytes:expr) => (let _ = self.stream.write($bytes)) }
 
         write!(cmd.as_bytes());
@@ -38,27 +41,27 @@ impl Connection {
         self.stream.flush()
     }
 
-    fn read_response(&mut self) -> IoResult<String> {
-        self.stream.read_line()
+    fn read_response(&mut self, buf: &mut String) -> Result<usize> {
+        self.stream.read_line(buf)
     }
 
     fn execute(&mut self, cmd: &str, args: Vec<String>, data: &[u8]) {
         let _ = self.send_command(cmd, args, data);
-        let response = self.read_response();
-        if response.is_err() {
+        let mut response: String = "".to_string();
+        if self.read_response(&mut response).is_err() {
             panic!(format!("beanstalkd command failed"));
         }
 
-        let resp = response.unwrap();
-        let line = resp.as_slice().trim_right();
+        let line = &response.trim_right();
         println!("{}", line);
         let fields: Vec<&str> = line.split(' ').collect();
         if fields.len() > 0 {
             match fields[0] {
                 "OK" | "FOUND" | "RESERVED" => {
                     let bytes = fields[fields.len()-1].parse::<usize>().unwrap();
-                    let payload = self.stream.read_exact(bytes+2).unwrap();
-                    println!("{}", String::from_utf8(payload).unwrap().as_slice().trim_right());
+                    let mut payload = Vec::with_capacity(bytes+2);
+                    let _ = self.stream.read(&mut payload);
+                    println!("{}", String::from_utf8(payload).unwrap().trim_right());
                 },
                 _ => {}
             }
