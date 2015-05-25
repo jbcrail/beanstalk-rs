@@ -1,16 +1,16 @@
 [package]
-
 name = "beanstalk-rs"
 version = "0.0.3"
 authors = [ "jbcrail@gmail.com" ]
 
 [lib]
-
 name = "beanstalk"
 path = "src/lib.rs"
 crate_type = ["rlib", "dylib"]
 
 [[bin]]
-
 name = "beanstalk-cli"
-path = "src/main.rs"
+path = "src/bin/main.rs"
+
+[dependencies]
+linenoise-rust = "0.1.11"
