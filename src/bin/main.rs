@@ -1,4 +1,5 @@
 extern crate beanstalk;
+extern crate getopts;
 extern crate linenoise;
 
 use beanstalk::Connection;
@@ -51,16 +52,22 @@ fn callback(input: &str) -> Vec<String> {
 }
 
 fn main() {
-    let args: Vec<String> = env::args().map(|s| s.to_string()).collect();
+    let args: Vec<String> = env::args().collect();
 
-    let host = if args.len() > 1 {
-        args[1].clone()
+    let opts = getopts::Options::new();
+    let matches = match opts.parse(&args[1..]) {
+        Ok(m) => m,
+        Err(f) => panic!("Invalid options: {}", f)
+    };
+
+    let host = if matches.free.len() > 0 {
+        matches.free[0].clone()
     } else {
         "127.0.0.1".to_string()
     };
 
-    let port: u16 = if args.len() > 2 {
-        args[2].parse::<u16>().unwrap()
+    let port: u16 = if matches.free.len() > 1 {
+        matches.free[1].parse::<u16>().unwrap()
     } else {
         11300
     };
