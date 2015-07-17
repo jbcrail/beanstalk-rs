@@ -1,5 +1,6 @@
+use bufstream::BufStream;
 use std::io::Result;
-use std::io::{BufRead, BufStream, Read, Write};
+use std::io::{BufRead, Read, Write};
 use std::net::TcpStream;
 use std::string::String;
 

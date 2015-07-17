@@ -15,3 +15,4 @@ path = "src/bin/main.rs"
 [dependencies]
 getopts = "0.2.11"
 linenoise-rust = "0.1.11"
+bufstream = "0.1"

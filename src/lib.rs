@@ -1,4 +1,4 @@
-#![feature(buf_stream)]
+extern crate bufstream;
 
 pub use connection::Connection;
 
