@@ -25,7 +25,7 @@ fn help() {
 }
 
 fn callback(input: &str) -> Vec<String> {
-    let mut ret: Vec<&str>;
+    let ret: Vec<&str>;
     if input.starts_with("i") {
         ret = vec!["ignore"];
     } else if input.starts_with("l") {
