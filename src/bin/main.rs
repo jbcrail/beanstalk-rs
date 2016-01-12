@@ -48,7 +48,7 @@ fn callback(input: &str) -> Vec<String> {
         ret = vec!["help"];
     }
 
-    return ret.iter().map(|s| s.to_string()).collect();
+    ret.iter().map(|s| (*s).to_owned()).collect()
 }
 
 fn main() {
@@ -60,21 +60,21 @@ fn main() {
         Err(f) => panic!("Invalid options: {}", f)
     };
 
-    let host = if matches.free.len() > 0 {
+    let host = if !matches.free.is_empty() {
         matches.free[0].clone()
     } else {
-        "127.0.0.1".to_string()
+        "127.0.0.1".to_owned()
     };
 
     let port: u16 = if matches.free.len() > 1 {
-        matches.free[1].parse::<u16>().unwrap()
+        matches.free[1].parse::<u16>().expect("failed to parse port")
     } else {
         11300
     };
 
     println!("# connecting to {}:{}", host, port);
     println!("# type 'help' for available commands");
-    let mut conn = Connection::new(&host, port).unwrap();
+    let mut conn = Connection::new(&host, port).expect("failed to open connection");
     linenoise::set_callback(callback);
 
     loop {
@@ -84,9 +84,9 @@ fn main() {
             None => { break }
             Some(input) => {
                 linenoise::history_add(&input[..]);
-                let args: Vec<&str> = input.split(' ').collect();
+                let vec: Vec<&str> = input.split(' ').collect();
 
-                match args[0] {
+                match vec[0] {
                     "help" => { help() },
                     "reserve" => {},
                     "peek-ready" => {},
@@ -96,10 +96,10 @@ fn main() {
                     "list-used-tube" => { conn.list_used_tube() },
                     "list-watched-tubes" => { conn.list_watched_tubes() },
                     "stats" => { conn.stats() },
-                    "use" => { conn.use_tube(args[1]) },
-                    "watch" => { conn.watch_tube(args[1]) },
-                    "ignore" => { conn.ignore_tube(args[1]) },
-                    "tube-stats" => { conn.tube_stats(args[1]) },
+                    "use" => { conn.use_tube(vec[1]) },
+                    "watch" => { conn.watch_tube(vec[1]) },
+                    "ignore" => { conn.ignore_tube(vec[1]) },
+                    "tube-stats" => { conn.tube_stats(vec[1]) },
                     "quit" => {
                         conn.quit();
                         break;

@@ -30,7 +30,7 @@ impl Connection {
         macro_rules! write { ($bytes:expr) => (let _ = self.stream.write($bytes)) }
 
         write!(cmd.as_bytes());
-        for arg in args.iter() {
+        for arg in &args {
             write!(b" ");
             write!(arg.as_bytes());
         }
@@ -48,7 +48,7 @@ impl Connection {
 
     fn execute(&mut self, cmd: &str, args: Vec<String>, data: &[u8]) {
         let _ = self.send_command(cmd, args, data);
-        let mut response: String = "".to_string();
+        let mut response: String = "".to_owned();
         if self.read_response(&mut response).is_err() {
             panic!(format!("beanstalkd command failed"));
         }
@@ -56,13 +56,13 @@ impl Connection {
         let line = &response.trim_right();
         println!("{}", line);
         let fields: Vec<&str> = line.split(' ').collect();
-        if fields.len() > 0 {
+        if !fields.is_empty() {
             match fields[0] {
                 "OK" | "FOUND" | "RESERVED" => {
-                    let bytes = fields[fields.len()-1].parse::<usize>().unwrap();
+                    let bytes = fields[fields.len()-1].parse::<usize>().expect("failed to parse bytes");
                     let mut payload = Vec::with_capacity(bytes+2);
                     let _ = self.stream.read(&mut payload);
-                    println!("{}", String::from_utf8(payload).unwrap().trim_right());
+                    println!("{}", String::from_utf8(payload).expect("failed to convert payload").trim_right());
                 },
                 _ => {}
             }
@@ -130,19 +130,19 @@ impl Connection {
     // tube commands
 
     pub fn use_tube(&mut self, tube: &str) {
-        execute!(self, "use", tube.to_string());
+        execute!(self, "use", tube.to_owned());
     }
 
     pub fn watch_tube(&mut self, tube: &str) {
-        execute!(self, "watch", tube.to_string());
+        execute!(self, "watch", tube.to_owned());
     }
 
     pub fn ignore_tube(&mut self, tube: &str) {
-        execute!(self, "ignore", tube.to_string());
+        execute!(self, "ignore", tube.to_owned());
     }
 
     pub fn pause_tube(&mut self, tube: &str, delay: u32) {
-        execute!(self, "pause-tube", tube.to_string(), delay.to_string());
+        execute!(self, "pause-tube", tube.to_owned(), delay.to_string());
     }
 
     pub fn list_tubes(&mut self) {
@@ -168,7 +168,7 @@ impl Connection {
     }
 
     pub fn tube_stats(&mut self, tube: &str) {
-        execute!(self, "stats-tube", tube.to_string());
+        execute!(self, "stats-tube", tube.to_owned());
     }
 
     // miscellaneous commands
