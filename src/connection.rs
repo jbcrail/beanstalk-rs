@@ -27,7 +27,7 @@ impl Connection {
     }
 
     fn send_command(&mut self, cmd: &str, args: Vec<String>, data: &[u8]) -> Result<()> {
-        macro_rules! write { ($bytes:expr) => (let _ = self.stream.write($bytes)) }
+        macro_rules! write { ($bytes:expr) => (let _ = self.stream.write($bytes);) }
 
         write!(cmd.as_bytes());
         for arg in &args {

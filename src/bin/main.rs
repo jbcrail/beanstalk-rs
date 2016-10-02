@@ -4,7 +4,6 @@ extern crate linenoise;
 
 use beanstalk::Connection;
 use std::env;
-use std::io::BufRead;
 
 fn help() {
     println!("Available commands:\n");
