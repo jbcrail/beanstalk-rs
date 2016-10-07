@@ -13,6 +13,6 @@ name = "beanstalk-cli"
 path = "src/bin/main.rs"
 
 [dependencies]
-getopts = "0.2.11"
-linenoise-rust = "0.1.11"
-bufstream = "0.1"
+getopts = "0.2.14"
+linenoise-rust = "0.2.0"
+bufstream = "0.1.2"
